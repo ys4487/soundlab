@@ -29,7 +29,16 @@
 
         /* לוח בקרה ראשי */
         #main-content { display: none; max-width: 1200px; margin: 0 auto; }
-        h1 { text-align: center; color: #38bdf8; margin-bottom: 20px; }
+        h1 { text-align: center; color: #38bdf8; margin-bottom: 10px; }
+
+        /* כפתור מידע כללי */
+        .info-btn {
+            background: #0ea5e9; color: #0f172a; border: none; padding: 10px 24px;
+            border-radius: 8px; font-weight: bold; cursor: pointer; display: block;
+            margin: 0 auto 30px auto; font-size: 16px; transition: 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        .info-btn:hover { background: #38bdf8; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(56, 189, 248, 0.4); }
 
         /* כפתורי סינון לפי קטגוריות */
         .filters { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; }
@@ -48,15 +57,15 @@
             background: #1e293b; border-radius: 12px; padding: 20px; 
             box-shadow: 0 4px 6px rgba(0,0,0,0.3); border: 1px solid #334155; 
             transition: transform 0.2s, border-color 0.2s;
-            cursor: pointer; /* הוספת סמן לחיצה */
+            cursor: pointer; 
         }
         .card:hover { transform: translateY(-3px); border-color: #38bdf8; }
         .card h3 { margin-top: 0; color: #38bdf8; }
         .card p { color: #94a3b8; font-size: 14px; }
         audio { width: 100%; margin-top: 15px; }
 
-        /* עיצוב חלונית המידע (Modal) */
-        #info-modal {
+        /* עיצוב חלוניות המידע (Modals) */
+        .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(15, 23, 42, 0.85); z-index: 2000;
             justify-content: center; align-items: center; backdrop-filter: blur(5px);
@@ -65,6 +74,7 @@
             background: #1e293b; padding: 30px; border-radius: 12px;
             max-width: 550px; width: 90%; text-align: right; border: 1px solid #38bdf8;
             box-shadow: 0 15px 30px rgba(0,0,0,0.6); position: relative;
+            max-height: 85vh; overflow-y: auto; /* הוספת גלילה לחלון ארוך */
         }
         .close-modal {
             position: absolute; top: 15px; left: 20px; font-size: 28px;
@@ -72,12 +82,19 @@
         }
         .close-modal:hover { color: #f8fafc; }
         .modal-content h3 { color: #38bdf8; margin-top: 0; margin-bottom: 15px; font-size: 22px; }
-        .modal-content p { color: #e2e8f0; font-size: 15px; line-height: 1.6; margin-bottom: 25px; }
+        .modal-content h4 { color: #f8fafc; margin-top: 20px; margin-bottom: 5px; font-size: 18px; }
+        .modal-content p { color: #e2e8f0; font-size: 15px; line-height: 1.6; margin-bottom: 15px; }
         .download-btn {
             display: inline-block; background: #38bdf8; color: #0f172a; padding: 10px 24px;
-            text-decoration: none; border-radius: 8px; font-weight: bold; transition: 0.2s;
+            text-decoration: none; border-radius: 8px; font-weight: bold; transition: 0.2s; margin-top: 10px;
         }
         .download-btn:hover { background: #0ea5e9; }
+        
+        /* עיצוב פס גלילה מותאם אישית לחלונית */
+        .modal-content::-webkit-scrollbar { width: 8px; }
+        .modal-content::-webkit-scrollbar-track { background: #0f172a; border-radius: 8px; }
+        .modal-content::-webkit-scrollbar-thumb { background: #334155; border-radius: 8px; }
+        .modal-content::-webkit-scrollbar-thumb:hover { background: #38bdf8; }
     </style>
 </head>
 <body>
@@ -88,17 +105,38 @@
             <h2>🧠 ברוכים הבאים למעבדת התדרים</h2>
             <p>הקבצים במערכת זו נועדו לסנכרון גלי מוח, הרפיה, מיקוד וריפוי באמצעות אקוסטיקה ותדרים ביולוגיים. כדי להפיק את המקסימום, שימו לב לכללים הבאים:</p>
             <ul>
-                <li>🎧 <strong>חובה אוזניות סטריאו:</strong> רוב הקבצים (Binaural Beats) משדרים תדר שונה לכל אוזן (מלבד קבצי הרעש והאיזוכרוני).</li>
-                <li>⏱️ <strong>זמן השפעה:</strong> למוח לוקח בערך 5 עד 15 דקות להינעל על התדר. מומלץ להאזין ברצף ולא לדלג.</li>
-                <li>📉 <strong>ווליום מותאם:</strong> שמרו על עוצמת שמע נעימה ולא רועשת מדי, במיוחד בקבצי הרפיה והמיגרנה.</li>
-                <li>🧘‍♂️ <strong>ריכוז מלא:</strong> מומלץ להאזין ללא הסחות דעת ורצוי בעצימת עיניים כדי לאפשר למוח להיסחף עם התדר.</li>
+                <li>🎧 <strong>חובה אוזניות סטריאו:</strong> רוב הקבצים (Binaural Beats) משדרים תדר שונה לכל אוזן.</li>
+                <li>⏱️ <strong>זמן השפעה:</strong> למוח לוקח בערך 5 עד 15 דקות להינעל על התדר.</li>
+                <li>📉 <strong>ווליום מותאם:</strong> שמרו על עוצמת שמע נעימה ולא רועשת מדי.</li>
+                <li>🧘‍♂️ <strong>ריכוז מלא:</strong> מומלץ להאזין ללא הסחות דעת ובעצימת עיניים.</li>
             </ul>
             <button class="btn-start" onclick="startApp()">הבנתי, היכנס למעבדה</button>
         </div>
     </div>
 
-    <!-- חלונית המידע (Modal) - מוסתרת כברירת מחדל -->
-    <div id="info-modal" onclick="closeModalOutside(event)">
+    <!-- חלונית המידע הכללי (איך זה עובד) -->
+    <div id="general-info-modal" class="modal-overlay" onclick="closeGeneralInfoOutside(event)">
+        <div class="modal-content" style="max-width: 650px;">
+            <button class="close-modal" onclick="closeGeneralInfo()">&times;</button>
+            <h3>🧠 המדע מאחורי התדרים: איך זה עובד?</h3>
+            <p>המוח שלנו פועל באמצעות רשת עצומה של תאי עצב (נוירונים) שמתקשרים זה עם זה דרך פולסים חשמליים. הפעילות החשמלית הזו מייצרת "גלי מוח" הניתנים למדידה. המדע גילה שתופעה פיזיקלית בשם <strong>"תגובת מעקב תדר" (Frequency Following Response)</strong> גורמת למוח לסנכרן את הגלים שלו בהתאם למקצב אקוסטי שהוא שומע.</p>
+            
+            <h4>🎧 תדרים בינוראליים (Binaural Beats)</h4>
+            <p>כיוון שהאוזן האנושית לא מסוגלת לשמוע תדרים נמוכים מאוד (כמו 5Hz שקשורים לשינה), הטכנולוגיה משתמשת בטריק: משדרים תדר אחד לאוזן ימין (למשל 200Hz) ותדר מעט שונה לאוזן שמאל (למשל 205Hz). המוח מחשב את ההפרש ביניהם (5Hz) ומייצר בעצמו פעימה פנימית בתדר הזה, מה שמוביל להרפיה עמוקה. <strong>לכן חובה להשתמש באוזניות סטריאו.</strong></p>
+            
+            <h4>🔊 טונים איזוכרוניים (Isochronic Tones)</h4>
+            <p>שיטה מתקדמת יותר שאינה דורשת אוזניות. מדובר בצליל בודד שמופעל ומופסק במהירות מדויקת. הפעימות החדות מאלצות את המוח "ליישר קו" עם הקצב שלהן בצורה מהירה ויעילה מאוד.</p>
+            
+            <h4>✨ תדרי סולפג'יו (Solfeggio Frequencies)</h4>
+            <p>סולם תדרים עתיק יומין ששימש מוזיקה מקודשת ומזמורים גרגוריאניים. המדע המודרני, ובפרט תחום הביו-תהודה, חוקר תדרים אלו (כמו 528Hz או 417Hz) ומגלה שיש להם השפעה פיזיולוגית ישירה על הורדת קורטיזול, הפחתת דלקתיות, ואפילו סיוע בהתחדשות תאית (DNA).</p>
+            
+            <h4>🌊 רעשי רקע (חום, ורוד, לבן)</h4>
+            <p>תדרי השמע שלנו עטופים לרוב ב"רעש" אקוסטי טבעי. <strong>רעש ורוד</strong> (כמו גשם) עוזר לאזן את פעילות הלב והשינה, ו<strong>רעש חום</strong> (כמו מפל מים עמוק) יוצר מיסוך מושלם של הסביבה, מדמה תחושת עיטוף כמו ברחם, ומרגיע מיד את מערכת העצבים המרכזית.</p>
+        </div>
+    </div>
+
+    <!-- חלונית המידע הספציפי לקובץ -->
+    <div id="info-modal" class="modal-overlay" onclick="closeModalOutside(event)">
         <div class="modal-content">
             <button class="close-modal" onclick="closeModal()">&times;</button>
             <h3 id="modal-title">כותרת הקובץ</h3>
@@ -110,6 +148,9 @@
     <!-- לוח הבקרה הראשי -->
     <div id="main-content">
         <h1>🧠 מעבדת התדרים והתת-מודע</h1>
+        
+        <!-- הכפתור החדש -->
+        <button class="info-btn" onclick="openGeneralInfo()">📖 המדע מאחורי התדרים - איך זה עובד?</button>
 
         <!-- כפתורי הסינון -->
         <div class="filters">
@@ -320,13 +361,11 @@
             }
         };
 
-        // פונקציה להפעלת האפליקציה (הסתרת מסך הפתיחה)
         function startApp() {
             document.getElementById('intro-screen').style.display = 'none';
             document.getElementById('main-content').style.display = 'block';
         }
 
-        // פונקציה לסינון קטגוריות
         function filterCategory(category, button) {
             let buttons = document.querySelectorAll('.filter-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
@@ -342,35 +381,42 @@
             });
         }
 
-        // פונקציה לפתיחת חלונית המידע בלחיצה על קובייה
+        // פתיחת חלון מידע של קובץ
         function openModal(filename, event) {
-            // אם המשתמש לחץ על כפתור הפליי בנגן האודיו עצמו - אל תפתח את החלונית
             if (event.target.tagName.toLowerCase() === 'audio') {
                 return; 
             }
-
-            // שליפת המידע מהמאגר שלנו
             const info = fileExplanations[filename];
             if(info) {
                 document.getElementById('modal-title').innerText = info.title;
                 document.getElementById('modal-text').innerText = info.text;
-                // עדכון כפתור ההורדה שיוריד את הקובץ הספציפי שנלחץ
                 document.getElementById('modal-download').href = filename;
-                
-                // הצגת החלונית
                 document.getElementById('info-modal').style.display = 'flex';
             }
         }
 
-        // פונקציה לסגירת החלונית (לחיצה על X)
         function closeModal() {
             document.getElementById('info-modal').style.display = 'none';
         }
 
-        // פונקציה לסגירת החלונית בלחיצה על הרקע הכהה
         function closeModalOutside(event) {
             if (event.target.id === 'info-modal') {
                 closeModal();
+            }
+        }
+
+        // פונקציות לחלון המידע הכללי החדש
+        function openGeneralInfo() {
+            document.getElementById('general-info-modal').style.display = 'flex';
+        }
+
+        function closeGeneralInfo() {
+            document.getElementById('general-info-modal').style.display = 'none';
+        }
+
+        function closeGeneralInfoOutside(event) {
+            if (event.target.id === 'general-info-modal') {
+                closeGeneralInfo();
             }
         }
     </script>
