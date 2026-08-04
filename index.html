@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>מעבדת התדרים האישית שלי</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body { font-family: Arial, sans-serif; background: #0f172a; color: #f8fafc; padding: 20px; direction: rtl; margin: 0; }
+        
+        /* מסך הסבר מקדים */
+        #intro-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.95); display: flex;
+            justify-content: center; align-items: center; z-index: 1000;
+        }
+        .intro-card {
+            background: #1e293b; border: 1px solid #334155; padding: 30px;
+            border-radius: 16px; max-width: 600px; width: 90%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5); text-align: right;
+        }
+        .intro-card h2 { color: #38bdf8; margin-top: 0; }
+        .intro-card ul { padding-right: 20px; color: #94a3b8; line-height: 1.6; }
+        .intro-card li { margin-bottom: 10px; }
+        .btn-start {
+            background: #38bdf8; color: #0f172a; border: none; padding: 12px 24px;
+            font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; margin-top: 20px;
+        }
+        .btn-start:hover { background: #0ea5e9; }
+
+        /* לוח בקרה ראשי */
+        #main-content { display: none; max-width: 1200px; margin: 0 auto; }
+        h1 { text-align: center; color: #38bdf8; margin-bottom: 20px; }
+
+        /* כפתורי סינון לפי קטגוריות */
+        .filters { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; }
+        .filter-btn {
+            background: #1e293b; color: #94a3b8; border: 1px solid #334155;
+            padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 14px;
+            transition: all 0.2s;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            background: #38bdf8; color: #0f172a; border-color: #38bdf8; font-weight: bold;
+        }
+
+        /* גריד הכרטיסיות */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .card { 
+            background: #1e293b; border-radius: 12px; padding: 20px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3); border: 1px solid #334155; 
+            transition: transform 0.2s, border-color 0.2s;
+            cursor: pointer; /* הוספת סמן לחיצה */
+        }
+        .card:hover { transform: translateY(-3px); border-color: #38bdf8; }
+        .card h3 { margin-top: 0; color: #38bdf8; }
+        .card p { color: #94a3b8; font-size: 14px; }
+        audio { width: 100%; margin-top: 15px; }
+
+        /* עיצוב חלונית המידע (Modal) */
+        #info-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.85); z-index: 2000;
+            justify-content: center; align-items: center; backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background: #1e293b; padding: 30px; border-radius: 12px;
+            max-width: 550px; width: 90%; text-align: right; border: 1px solid #38bdf8;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.6); position: relative;
+        }
+        .close-modal {
+            position: absolute; top: 15px; left: 20px; font-size: 28px;
+            color: #94a3b8; cursor: pointer; background: none; border: none;
+        }
+        .close-modal:hover { color: #f8fafc; }
+        .modal-content h3 { color: #38bdf8; margin-top: 0; margin-bottom: 15px; font-size: 22px; }
+        .modal-content p { color: #e2e8f0; font-size: 15px; line-height: 1.6; margin-bottom: 25px; }
+        .download-btn {
+            display: inline-block; background: #38bdf8; color: #0f172a; padding: 10px 24px;
+            text-decoration: none; border-radius: 8px; font-weight: bold; transition: 0.2s;
+        }
+        .download-btn:hover { background: #0ea5e9; }
+    </style>
+</head>
+<body>
+
+    <!-- מסך הסבר מקדים -->
+    <div id="intro-screen">
+        <div class="intro-card">
+            <h2>🧠 ברוכים הבאים למעבדת התדרים</h2>
+            <p>הקבצים במערכת זו נועדו לסנכרון גלי מוח, הרפיה, מיקוד וריפוי באמצעות אקוסטיקה ותדרים ביולוגיים. כדי להפיק את המקסימום, שימו לב לכללים הבאים:</p>
+            <ul>
+                <li>🎧 <strong>חובה אוזניות סטריאו:</strong> רוב הקבצים (Binaural Beats) משדרים תדר שונה לכל אוזן (מלבד קבצי הרעש והאיזוכרוני).</li>
+                <li>⏱️ <strong>זמן השפעה:</strong> למוח לוקח בערך 5 עד 15 דקות להינעל על התדר. מומלץ להאזין ברצף ולא לדלג.</li>
+                <li>📉 <strong>ווליום מותאם:</strong> שמרו על עוצמת שמע נעימה ולא רועשת מדי, במיוחד בקבצי הרפיה והמיגרנה.</li>
+                <li>🧘‍♂️ <strong>ריכוז מלא:</strong> מומלץ להאזין ללא הסחות דעת ורצוי בעצימת עיניים כדי לאפשר למוח להיסחף עם התדר.</li>
+            </ul>
+            <button class="btn-start" onclick="startApp()">הבנתי, היכנס למעבדה</button>
+        </div>
+    </div>
+
+    <!-- חלונית המידע (Modal) - מוסתרת כברירת מחדל -->
+    <div id="info-modal" onclick="closeModalOutside(event)">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+            <h3 id="modal-title">כותרת הקובץ</h3>
+            <p id="modal-text">כאן יופיע ההסבר המפורט על הקובץ.</p>
+            <a id="modal-download" href="#" download class="download-btn">⬇️ הורדת קובץ למכשיר</a>
+        </div>
+    </div>
+
+    <!-- לוח הבקרה הראשי -->
+    <div id="main-content">
+        <h1>🧠 מעבדת התדרים והתת-מודע</h1>
+
+        <!-- כפתורי הסינון -->
+        <div class="filters">
+            <button class="filter-btn active" onclick="filterCategory('all', this)">הכל</button>
+            <button class="filter-btn" onclick="filterCategory('focus', this)">⚡ פוקוס ופרודוקטיביות</button>
+            <button class="filter-btn" onclick="filterCategory('sleep', this)">🌙 שינה וחלומות</button>
+            <button class="filter-btn" onclick="filterCategory('healing', this)">✨ ריפוי וגוף</button>
+            <button class="filter-btn" onclick="filterCategory('mind', this)">🧘 רוגע ושחרור מנטלי</button>
+            <button class="filter-btn" onclick="filterCategory('noise', this)">💧 רעשים טהורים</button>
+        </div>
+
+        <!-- רשימת הקבצים עם אירוע onclick לחלונית -->
+        <div class="grid">
+            <div class="card" data-category="mind" onclick="openModal('alpha_brown.mp3', event)">
+                <h3>🌟 אלפא - רגיעה והפגת מתח</h3>
+                <p>פער של 10Hz + רעש חום. מעולה להורדת סטרס וקריאה.</p>
+                <audio controls src="alpha_brown.mp3"></audio>
+            </div>
+            <div class="card" data-category="focus" onclick="openModal('beta_brown.mp3', event)">
+                <h3>⚡ בטא - פוקוס עמוק</h3>
+                <p>פער של 14Hz + רעש חום. מצוין לעבודה, תכנות ולמידה אינטנסיבית.</p>
+                <audio controls src="beta_brown.mp3"></audio>
+            </div>
+            <div class="card" data-category="sleep" onclick="openModal('delta_brown.mp3', event)">
+                <h3>🌙 דלתא - שינה עמוקה</h3>
+                <p>פער של 2Hz + רעש חום. תדר נמוך להתאוששות פיזית ומנוחה מוחלטת.</p>
+                <audio controls src="delta_brown.mp3"></audio>
+            </div>
+            <div class="card" data-category="focus" onclick="openModal('gamma_brown.mp3', event)">
+                <h3>🚀 גאמא - טורבו קוגניטיבי</h3>
+                <p>פער של 40Hz + רעש חום. עיבוד מידע מהיר וריכוז חסר פשרות.</p>
+                <audio controls src="gamma_brown.mp3"></audio>
+            </div>
+            <div class="card" data-category="mind" onclick="openModal('isochronic_brown.mp3', event)">
+                <h3>🔊 איזוכרוני אלפא</h3>
+                <p>פעימות 10Hz ברמקול פתוח. רגיעה מיידית בלי צורך באוזניות.</p>
+                <audio controls src="isochronic_brown.mp3"></audio>
+            </div>
+            <div class="card" data-category="noise" onclick="openModal('pure_brown.mp3', event)">
+                <h3>💧 רעש חום טהור</h3>
+                <p>מפל מים עמוק. למיסוך רעשי רקע מושלם ובידוד סביבתי.</p>
+                <audio controls src="pure_brown.mp3"></audio>
+            </div>
+            <div class="card" data-category="noise" onclick="openModal('pure_pink.mp3', event)">
+                <h3>🌧️ רעש ורוד טהור</h3>
+                <p>גשם יציב ורצוף. מאזן את הלב ומשפר את איכות השינה.</p>
+                <audio controls src="pure_pink.mp3"></audio>
+            </div>
+            <div class="card" data-category="healing" onclick="openModal('healing_528_pink.mp3', event)">
+                <h3>✨ הריפוי 528Hz</h3>
+                <p>תדר הנס להתחדשות תאית והפחתת סטרס, עם רעש ורוד.</p>
+                <audio controls src="healing_528_pink.mp3"></audio>
+            </div>
+            <div class="card" data-category="mind" onclick="openModal('release_396_brown.mp3', event)">
+                <h3>⚓ שחרור פחדים 396Hz</h3>
+                <p>עבודה על התת-מודע ושחרור כיווץ פיזי בבטן, עם רעש חום.</p>
+                <audio controls src="release_396_brown.mp3"></audio>
+            </div>
+            <div class="card" data-category="healing" onclick="openModal('neuro_40hz_brown.mp3', event)">
+                <h3>🧠 ניקוי נוירולוגי 40Hz</h3>
+                <p>טון איזוכרוני נגד דלקות וכאבים עצביים, עם רעש חום.</p>
+                <audio controls src="neuro_40hz_brown.mp3"></audio>
+            </div>
+            <div class="card" data-category="mind" onclick="openModal('schumann_7_83_brown.mp3', event)">
+                <h3>🌍 תהודת שומאן 7.83Hz</h3>
+                <p>דופק כדור הארץ לקרקוע ואיפוס השעון הביולוגי.</p>
+                <audio controls src="schumann_7_83_brown.mp3"></audio>
+            </div>
+            <div class="card" data-category="healing" onclick="openModal('migraine_brown.mp3', event)">
+                <h3>🤕 הקלה על מיגרנות</h3>
+                <p>קוקטייל 174Hz ותטא בווליום נמוך להרגעה בזמן התקף.</p>
+                <audio controls src="migraine_brown.mp3"></audio>
+            </div>
+            <div class="card" data-category="sleep" onclick="openModal('lucid_dream_6hz.mp3', event)">
+                <h3>🌌 חלום צלודי 6Hz</h3>
+                <p>תדר תטא עמוק המעודד שנת חלום מודעת ושליטה בחלומות.</p>
+                <audio controls src="lucid_dream_6hz.mp3"></audio>
+            </div>
+            <div class="card" data-category="focus" onclick="openModal('morning_432hz.mp3', event)">
+                <h3>☀️ אנרגיית בוקר 432Hz</h3>
+                <p>תדר הרמוני טבעי להתעוררות חדה ונקייה בלי קפה.</p>
+                <audio controls src="morning_432hz.mp3"></audio>
+            </div>
+            <div class="card" data-category="mind" onclick="openModal('anger_release_741hz.mp3', event)">
+                <h3>🍃 שחרור כעסים 741Hz</h3>
+                <p>ניקוי מחשבות רעילות ועומס מנטלי אחרי יום קשה.</p>
+                <audio controls src="anger_release_741hz.mp3"></audio>
+            </div>
+            <div class="card" data-category="healing" onclick="openModal('gut_relief_285hz.mp3', event)">
+                <h3>🧘‍♂️ הקלה עיכולית 285Hz</h3>
+                <p>שחרור מתחים וכיווצים במערכת העיכול (המוח השני).</p>
+                <audio controls src="gut_relief_285hz.mp3"></audio>
+            </div>
+            <div class="card" data-category="focus" onclick="openModal('flow_state_11hz.mp3', event)">
+                <h3>🎨 מצב זרימה ויצירתיות (Flow)</h3>
+                <p>פער 11Hz עם רעש ורוד. מכניס את המוח למצב "Flow" ליצירה וכתיבה.</p>
+                <audio controls src="flow_state_11hz.mp3"></audio>
+            </div>
+            <div class="card" data-category="healing" onclick="openModal('eye_strain_relief.mp3', event)">
+                <h3>👁️ הרפיית עיניים ומתח דיגיטלי</h3>
+                <p>תדר 528Hz עם פער שומאן ורעש ורוד לשחרור עייפות מול מסכים.</p>
+                <audio controls src="eye_strain_relief.mp3"></audio>
+            </div>
+            <div class="card" data-category="focus" onclick="openModal('brain_fog_clear.mp3', event)">
+                <h3>💡 ניקוי ערפל מוחי (Brain Fog)</h3>
+                <p>תדר 852Hz עם פער 15Hz ורעש ורוד לפיזור עומס מנטלי.</p>
+                <audio controls src="brain_fog_clear.mp3"></audio>
+            </div>
+            <div class="card" data-category="mind" onclick="openModal('heart_639.mp3', event)">
+                <h3>💖 איזון והרמוניה רגשית (639Hz)</h3>
+                <p>תדר 639Hz עם פער שומאן ורעש ורוד. ליישור קו בין הרגש להיגיון והרגעה פנימית.</p>
+                <audio controls src="heart_639.mp3"></audio>
+            </div>
+            <div class="card" data-category="healing" onclick="openModal('hormonal_calm_417hz.mp3', event)">
+                <h3>🌸 הרגעה ושחרור מתח הורמונלי (417Hz)</h3>
+                <p>תדר 417Hz עם פער תטא ורעש חום עוטף. נועד להרגיע את מערכת העצבים.</p>
+                <audio controls src="hormonal_calm_417hz.mp3"></audio>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // מאגר המידע המקצועי לכל קובץ
+        const fileExplanations = {
+            'alpha_brown.mp3': {
+                title: '🌟 אלפא - רגיעה והפגת מתח',
+                text: 'גלי אלפא (8-12 הרץ) הם התדר הטבעי של המוח במצב מנוחה ועירות רגועה. האזנה לתדר זה עוזרת להאט את קצב המחשבות, מפחיתה סטרס וחרדה, ומומלצת מאוד לזמן קריאה, מדיטציה קלה או לשחרור עומס אחרי יום עבודה אינטנסיבי.'
+            },
+            'beta_brown.mp3': {
+                title: '⚡ בטא - פוקוס עמוק',
+                text: 'גלי בטא (14 הרץ) הם התדר בו המוח פועל בזמן ריכוז, פתרון בעיות וחשיבה אנליטית. הקובץ נועד למקד את הקשב שלך כמו לייזר, והוא מושלם לזמן עבודה אינטנסיבי, תכנות, כתיבה או למידה למבחן. עטוף ברעש חום המסנן הסחות דעת.'
+            },
+            'delta_brown.mp3': {
+                title: '🌙 דלתא - שינה עמוקה',
+                text: 'גלי דלתא (2 הרץ) הם הגלים האיטיים ביותר של המוח, המופקים באופן טבעי בזמן שינה עמוקה ונטולת חלומות. זהו השלב שבו הגוף הפיזי משקם ומרפא את עצמו. הקובץ מסייע להירדם מהר יותר ולשפר את איכות ההתאוששות בלילה.'
+            },
+            'gamma_brown.mp3': {
+                title: '🚀 גאמא - טורבו קוגניטיבי',
+                text: 'גלי גאמא (40 הרץ) מקושרים לתפקוד קוגניטיבי ברמות הגבוהות ביותר - עיבוד מידע מהיר, תובנות פתאומיות ולמידה מורכבת. מומלץ להאזין כשאתה זקוק ל"בוסט" של אנרגיה מנטלית וחידוד הזיכרון לטווח קצר.'
+            },
+            'isochronic_brown.mp3': {
+                title: '🔊 איזוכרוני אלפא',
+                text: 'בניגוד לתדרים בינוראליים (Binaural Beats) הדורשים אוזניות סטריאו, טון איזוכרוני משתמש בפעימות סאונד בודדות ומרווחות כדי לסנכרן את המוח. קובץ זה מכוון לתדר אלפא מרגיע, וניתן להאזין לו גם מבעד לרמקול הפתוח בחדר.'
+            },
+            'pure_brown.mp3': {
+                title: '💧 רעש חום טהור',
+                text: 'רעש חום מכיל תדרים נמוכים ועמוקים במיוחד (מזכיר שאגה רחוקה של מפל מים). הוא נחשב למצוין למיסוך רעשי רקע (כמו דיבורים במשרד או תנועת רכבים בחוץ) ויוצר "בועה" אקוסטית חמימה שעוזרת להתרכז או להירגע.'
+            },
+            'pure_pink.mp3': {
+                title: '🌧️ רעש ורוד טהור',
+                text: 'רעש ורוד מאוזן יותר מבחינת תדרים בהשוואה לרעש לבן (מזכיר צליל של גשם רצוף ועדין). מחקרים מראים כי האזנה לרעש ורוד בזמן שינה מסייעת בהורדת קצב הלב, מאזנת את גלי המוח ומשפרת משמעותית את יציבות השינה.'
+            },
+            'healing_528_pink.mp3': {
+                title: '✨ הריפוי 528Hz',
+                text: 'תדר 528Hz מוכר במסורת הסולפג\'יו כ"תדר הנס". ברפואת תדרים הוא מקושר לתיקון DNA, התחדשות תאית, והפחתה דרמטית של רמות הקורטיזול (הורמון הלחץ) בגוף. מומלץ להאזנה במצבי מחלה, עייפות כרונית או סטרס קיצוני.'
+            },
+            'release_396_brown.mp3': {
+                title: '⚓ שחרור פחדים 396Hz',
+                text: 'תדר 396Hz מסדרת הסולפג\'יו נועד לנקות מחסומים רגשיים, במיוחד תחושות של פחד ואשמה שמכווצות את מערכת העיכול והנשימה. השילוב עם רעש חום עוזר לקרקע את מערכת העצבים ולשחרר מועקה פיזית האגורה בגוף.'
+            },
+            'neuro_40hz_brown.mp3': {
+                title: '🧠 ניקוי נוירולוגי 40Hz',
+                text: 'מחקרים נוירולוגיים עדכניים מצביעים על כך שחשיפה ממושכת לתדר 40Hz (בטון איזוכרוני) מסייעת למערכת החיסונית של המוח לנקות חלבונים רעילים, להפחית דלקתיות ולהקל במקרים של כאבים עצביים וערפל מוחי.'
+            },
+            'schumann_7_83_brown.mp3': {
+                title: '🌍 תהודת שומאן 7.83Hz',
+                text: '7.83 הרץ הוא התדר האלקטרומגנטי הטבעי של כדור הארץ (הידוע כ"תהודת שומאן"). האזנה לתדר זה בטכנולוגיה בינוראלית מדמה את האפקט של הליכה יחפה בטבע ("קרקוע"), מאפסת את השעון הביולוגי ומשרה רוגע טבעי.'
+            },
+            'migraine_brown.mp3': {
+                title: '🤕 הקלה על מיגרנות',
+                text: 'מיקס ייעודי להקלה בזמן התקפי כאב ראש ומיגרנה. משלב את תדר 174Hz (הידוע כמשכך כאבים אקוסטי טבעי) יחד עם גלי תטא מרגיעים בווליום נמוך ועדין, במטרה לא להעמיס על העצבים בזמן הרגישות לסאונד.'
+            },
+            'lucid_dream_6hz.mp3': {
+                title: '🌌 חלום צלודי 6Hz',
+                text: 'גלי תטא עמוקים (6 הרץ) שמביאים את המוח בדיוק אל קו התפר שבין ערות לשינה (המצב ההיפנוגוגי). האזנה לתדר זה לפני השינה או במהלכה מעודדת מצב של "חלום צלול" (Lucid Dream) - מודעות ושליטה בתוך עולם החלומות.'
+            },
+            'morning_432hz.mp3': {
+                title: '☀️ אנרגיית בוקר 432Hz',
+                text: 'תדר 432Hz נחשב לתדר הרמוני טבעי שמהדהד ביחס ישר לטבע. הוא מעורר את מערכת העצבים בצורה חלקה, ממריץ את זרימת הדם בבוקר, ומהווה תחליף מצוין להתעוררות קופצנית המבוססת על קפאין או שעונים מעוררים צורמים.'
+            },
+            'anger_release_741hz.mp3': {
+                title: '🍃 שחרור כעסים 741Hz',
+                text: 'תדר 741Hz מתמקד בניקוי רעלים, הן ברמה התאית הפיזית והן ברמה המנטלית. מומלץ להאזין לו לאחר יום מתוח, עימות קשה או הצפה רגשית, על מנת לשחרר כעסים אגורים, לנקות מחשבות שליליות ולהחזיר את הבהירות.'
+            },
+            'gut_relief_285hz.mp3': {
+                title: '🧘‍♂️ הקלה עיכולית 285Hz',
+                text: 'תדר 285Hz מקושר לריפוי רקמות ואיברים פנימיים. מאחר ומערכת העיכול מגיבה בחוזקה ללחץ נפשי, הקובץ נועד לשחרר כיווצים, להרפות את מה שמוכר כ"המוח השני" (הבטן) ולקדם זרימת דם בריאה למערכת העיכול.'
+            },
+            'flow_state_11hz.mp3': {
+                title: '🎨 מצב זרימה ויצירתיות (Flow)',
+                text: 'פער של 11Hz מציב את המוח בדיוק על התפר שבין גלי אלפא מרגיעים לגלי בטא ממוקדים - זהו "מצב הזרימה" (Flow State). במצב זה פעולות מורכבות, יצירתיות וכתיבה קורות כמעט ללא תחושת מאמץ או מחסומים מנטליים.'
+            },
+            'eye_strain_relief.mp3': {
+                title: '👁️ הרפיית עיניים ומתח דיגיטלי',
+                text: 'לאחר שעות ארוכות מול מסכים, עצבי הראייה ושרירי העורף נמתחים עד כאב. שילוב תדר ההתחדשות (528Hz) יחד עם תדר הקרקוע של כדור הארץ, מסייע בהורדת המתח מהעיניים, הרפיית שרירי הפנים והפגת עייפות דיגיטלית מצטברת.'
+            },
+            'brain_fog_clear.mp3': {
+                title: '💡 ניקוי ערפל מוחי (Brain Fog)',
+                text: 'תדר 852Hz ידוע כמחזיר סדר רוחני ובהירות. השילוב שלו עם תדרי בטא עדינים נועד לפזר את תחושת הכובד בראש, "לאוורר" את המחשבות, ולהחזיר את החדות הקוגניטיבית במצבים של עייפות מנטלית או עומס מידע.'
+            },
+            'heart_639.mp3': {
+                title: '💖 איזון והרמוניה רגשית (639Hz)',
+                text: 'תדר 639Hz מסורתי לאיזון צ\'אקרת הלב ומערכות יחסים. ברמה הנוירולוגית, הוא עוזר ליצור קוהרנטיות (סנכרון הרמוני) בין קצב הלב לפעילות המוחית, מה שמסייע בהרגעת קונפליקטים פנימיים בין רגש להיגיון ומרכך חרדות.'
+            },
+            'hormonal_calm_417hz.mp3': {
+                title: '🌸 הרגעה ושחרור מתח הורמונלי (417Hz)',
+                text: 'שינויים הורמונליים גורמים לעיתים קרובות לזינוק בסטרס. תדר 417Hz (הידוע כשחרור טראומה ופחד) יחד עם גלי תטא עמוקים, משדרים למוח אותות של ביטחון כדי להשקיט את מנגנון ה"הילחם או ברח", ולהחזיר תחושת שליטה, קרקוע ורוגע מוחלט.'
+            }
+        };
+
+        // פונקציה להפעלת האפליקציה (הסתרת מסך הפתיחה)
+        function startApp() {
+            document.getElementById('intro-screen').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+        }
+
+        // פונקציה לסינון קטגוריות
+        function filterCategory(category, button) {
+            let buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            let cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // פונקציה לפתיחת חלונית המידע בלחיצה על קובייה
+        function openModal(filename, event) {
+            // אם המשתמש לחץ על כפתור הפליי בנגן האודיו עצמו - אל תפתח את החלונית
+            if (event.target.tagName.toLowerCase() === 'audio') {
+                return; 
+            }
+
+            // שליפת המידע מהמאגר שלנו
+            const info = fileExplanations[filename];
+            if(info) {
+                document.getElementById('modal-title').innerText = info.title;
+                document.getElementById('modal-text').innerText = info.text;
+                // עדכון כפתור ההורדה שיוריד את הקובץ הספציפי שנלחץ
+                document.getElementById('modal-download').href = filename;
+                
+                // הצגת החלונית
+                document.getElementById('info-modal').style.display = 'flex';
+            }
+        }
+
+        // פונקציה לסגירת החלונית (לחיצה על X)
+        function closeModal() {
+            document.getElementById('info-modal').style.display = 'none';
+        }
+
+        // פונקציה לסגירת החלונית בלחיצה על הרקע הכהה
+        function closeModalOutside(event) {
+            if (event.target.id === 'info-modal') {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
