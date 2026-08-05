@@ -162,134 +162,143 @@
             <button class="filter-btn" onclick="filterCategory('noise', this)">💧 רעשים טהורים</button>
         </div>
 
+        <!-- שורת סינון שניה: סוגי טכנולוגיות שמע -->
+        <div class="filters" style="margin-top: -15px;">
+            <button class="filter-btn" onclick="filterCategory('binaural', this)">🎧 תדרים בינוראליים</button>
+            <button class="filter-btn" onclick="filterCategory('isochronic', this)">🔊 טונים איזוכרוניים</button>
+            <button class="filter-btn" onclick="filterCategory('solfeggio', this)">✨ תדרי סולפג'יו</button>
+            <button class="filter-btn" onclick="filterCategory('background', this)">🌊 רעשי רקע</button>
+        </div>
+
         <!-- רשימת הקבצים עם אירוע onclick לחלונית -->
         <div class="grid">
-            <div class="card" data-category="mind" onclick="openModal('alpha_brown.mp3', event)">
+            <!-- שימו לב לתוספות בתוך data-category ללא מחיקת הישנות -->
+            <div class="card" data-category="mind binaural" onclick="openModal('alpha_brown.mp3', event)">
                 <h3>🌟 אלפא - רגיעה והפגת מתח</h3>
                 <p>פער של 10Hz + רעש חום. מעולה להורדת סטרס וקריאה.</p>
                 <audio controls src="alpha_brown.mp3"></audio>
             </div>
-            <div class="card" data-category="focus" onclick="openModal('beta_brown.mp3', event)">
+            <div class="card" data-category="focus binaural" onclick="openModal('beta_brown.mp3', event)">
                 <h3>⚡ בטא - פוקוס עמוק</h3>
                 <p>פער של 14Hz + רעש חום. מצוין לעבודה, תכנות ולמידה אינטנסיבית.</p>
                 <audio controls src="beta_brown.mp3"></audio>
             </div>
-            <div class="card" data-category="sleep" onclick="openModal('delta_brown.mp3', event)">
+            <div class="card" data-category="sleep binaural" onclick="openModal('delta_brown.mp3', event)">
                 <h3>🌙 דלתא - שינה עמוקה</h3>
                 <p>פער של 2Hz + רעש חום. תדר נמוך להתאוששות פיזית ומנוחה מוחלטת.</p>
                 <audio controls src="delta_brown.mp3"></audio>
             </div>
-            <div class="card" data-category="focus" onclick="openModal('gamma_brown.mp3', event)">
+            <div class="card" data-category="focus binaural" onclick="openModal('gamma_brown.mp3', event)">
                 <h3>🚀 גאמא - טורבו קוגניטיבי</h3>
                 <p>פער של 40Hz + רעש חום. עיבוד מידע מהיר וריכוז חסר פשרות.</p>
                 <audio controls src="gamma_brown.mp3"></audio>
             </div>
-            <div class="card" data-category="mind" onclick="openModal('isochronic_brown.mp3', event)">
+            <div class="card" data-category="mind isochronic" onclick="openModal('isochronic_brown.mp3', event)">
                 <h3>🔊 איזוכרוני אלפא</h3>
                 <p>פעימות 10Hz ברמקול פתוח. רגיעה מיידית בלי צורך באוזניות.</p>
                 <audio controls src="isochronic_brown.mp3"></audio>
             </div>
-            <div class="card" data-category="noise" onclick="openModal('pure_brown.mp3', event)">
+            <div class="card" data-category="noise background" onclick="openModal('pure_brown.mp3', event)">
                 <h3>💧 רעש חום טהור</h3>
                 <p>מפל מים עמוק. למיסוך רעשי רקע מושלם ובידוד סביבתי.</p>
                 <audio controls src="pure_brown.mp3"></audio>
             </div>
-            <div class="card" data-category="noise" onclick="openModal('pure_pink.mp3', event)">
+            <div class="card" data-category="noise background" onclick="openModal('pure_pink.mp3', event)">
                 <h3>🌧️ רעש ורוד טהור</h3>
                 <p>גשם יציב ורצוף. מאזן את הלב ומשפר את איכות השינה.</p>
                 <audio controls src="pure_pink.mp3"></audio>
             </div>
-            <div class="card" data-category="healing" onclick="openModal('healing_528_pink.mp3', event)">
+            <div class="card" data-category="healing solfeggio" onclick="openModal('healing_528_pink.mp3', event)">
                 <h3>✨ הריפוי 528Hz</h3>
                 <p>תדר הנס להתחדשות תאית והפחתת סטרס, עם רעש ורוד.</p>
                 <audio controls src="healing_528_pink.mp3"></audio>
             </div>
-            <div class="card" data-category="mind" onclick="openModal('release_396_brown.mp3', event)">
+            <div class="card" data-category="mind solfeggio binaural" onclick="openModal('release_396_brown.mp3', event)">
                 <h3>⚓ שחרור פחדים 396Hz</h3>
                 <p>עבודה על התת-מודע ושחרור כיווץ פיזי בבטן, עם רעש חום.</p>
                 <audio controls src="release_396_brown.mp3"></audio>
             </div>
-            <div class="card" data-category="healing" onclick="openModal('neuro_40hz_brown.mp3', event)">
+            <div class="card" data-category="healing isochronic" onclick="openModal('neuro_40hz_brown.mp3', event)">
                 <h3>🧠 ניקוי נוירולוגי 40Hz</h3>
                 <p>טון איזוכרוני נגד דלקות וכאבים עצביים, עם רעש חום.</p>
                 <audio controls src="neuro_40hz_brown.mp3"></audio>
             </div>
-            <div class="card" data-category="mind" onclick="openModal('schumann_7_83_brown.mp3', event)">
+            <div class="card" data-category="mind binaural" onclick="openModal('schumann_7_83_brown.mp3', event)">
                 <h3>🌍 תהודת שומאן 7.83Hz</h3>
                 <p>דופק כדור הארץ לקרקוע ואיפוס השעון הביולוגי.</p>
                 <audio controls src="schumann_7_83_brown.mp3"></audio>
             </div>
-            <div class="card" data-category="healing" onclick="openModal('migraine_brown.mp3', event)">
+            <div class="card" data-category="healing binaural" onclick="openModal('migraine_brown.mp3', event)">
                 <h3>🤕 הקלה על מיגרנות</h3>
                 <p>קוקטייל 174Hz ותטא בווליום נמוך להרגעה בזמן התקף.</p>
                 <audio controls src="migraine_brown.mp3"></audio>
             </div>
-            <div class="card" data-category="sleep" onclick="openModal('lucid_dream_6hz.mp3', event)">
+            <div class="card" data-category="sleep binaural" onclick="openModal('lucid_dream_6hz.mp3', event)">
                 <h3>🌌 חלום צלודי 6Hz</h3>
                 <p>תדר תטא עמוק המעודד שנת חלום מודעת ושליטה בחלומות.</p>
                 <audio controls src="lucid_dream_6hz.mp3"></audio>
             </div>
-            <div class="card" data-category="focus" onclick="openModal('morning_432hz.mp3', event)">
+            <div class="card" data-category="focus solfeggio" onclick="openModal('morning_432hz.mp3', event)">
                 <h3>☀️ אנרגיית בוקר 432Hz</h3>
                 <p>תדר הרמוני טבעי להתעוררות חדה ונקייה בלי קפה.</p>
                 <audio controls src="morning_432hz.mp3"></audio>
             </div>
-            <div class="card" data-category="mind" onclick="openModal('anger_release_741hz.mp3', event)">
+            <div class="card" data-category="mind solfeggio" onclick="openModal('anger_release_741hz.mp3', event)">
                 <h3>🍃 שחרור כעסים 741Hz</h3>
                 <p>ניקוי מחשבות רעילות ועומס מנטלי אחרי יום קשה.</p>
                 <audio controls src="anger_release_741hz.mp3"></audio>
             </div>
-            <div class="card" data-category="healing" onclick="openModal('gut_relief_285hz.mp3', event)">
+            <div class="card" data-category="healing solfeggio" onclick="openModal('gut_relief_285hz.mp3', event)">
                 <h3>🧘‍♂️ הקלה עיכולית 285Hz</h3>
                 <p>שחרור מתחים וכיווצים במערכת העיכול (המוח השני).</p>
                 <audio controls src="gut_relief_285hz.mp3"></audio>
             </div>
-            <div class="card" data-category="focus" onclick="openModal('flow_state_11hz.mp3', event)">
+            <div class="card" data-category="focus binaural" onclick="openModal('flow_state_11hz.mp3', event)">
                 <h3>🎨 מצב זרימה ויצירתיות (Flow)</h3>
                 <p>פער 11Hz עם רעש ורוד. מכניס את המוח למצב "Flow" ליצירה וכתיבה.</p>
                 <audio controls src="flow_state_11hz.mp3"></audio>
             </div>
-            <div class="card" data-category="healing" onclick="openModal('eye_strain_relief.mp3', event)">
+            <div class="card" data-category="healing solfeggio binaural" onclick="openModal('eye_strain_relief.mp3', event)">
                 <h3>👁️ הרפיית עיניים ומתח דיגיטלי</h3>
                 <p>תדר 528Hz עם פער שומאן ורעש ורוד לשחרור עייפות מול מסכים.</p>
                 <audio controls src="eye_strain_relief.mp3"></audio>
             </div>
-            <div class="card" data-category="focus" onclick="openModal('brain_fog_clear.mp3', event)">
+            <div class="card" data-category="focus solfeggio binaural" onclick="openModal('brain_fog_clear.mp3', event)">
                 <h3>💡 ניקוי ערפל מוחי (Brain Fog)</h3>
                 <p>תדר 852Hz עם פער 15Hz ורעש ורוד לפיזור עומס מנטלי.</p>
                 <audio controls src="brain_fog_clear.mp3"></audio>
             </div>
-            <div class="card" data-category="mind" onclick="openModal('heart_639.mp3', event)">
+            <div class="card" data-category="mind solfeggio binaural" onclick="openModal('heart_639.mp3', event)">
                 <h3>💖 איזון והרמוניה רגשית (639Hz)</h3>
                 <p>תדר 639Hz עם פער שומאן ורעש ורוד. ליישור קו בין הרגש להיגיון והרגעה פנימית.</p>
                 <audio controls src="heart_639.mp3"></audio>
             </div>
-            <div class="card" data-category="healing" onclick="openModal('hormonal_calm_417hz.mp3', event)">
+            <div class="card" data-category="healing solfeggio binaural" onclick="openModal('hormonal_calm_417hz.mp3', event)">
                 <h3>🌸 הרגעה ושחרור מתח הורמונלי (417Hz)</h3>
                 <p>תדר 417Hz עם פער תטא ורעש חום עוטף. נועד להרגיע את מערכת העצבים.</p>
                 <audio controls src="hormonal_calm_417hz.mp3"></audio>
             </div>
-            <div class="card" data-category="focus" onclick="openModal('pure_joy_963hz.mp3', event)">
+            <div class="card" data-category="focus solfeggio binaural" onclick="openModal('pure_joy_963hz.mp3', event)">
                 <h3>☀️ שמחה ומוטיבציה 963Hz</h3>
                 <p>תדר 963Hz (תדר האור) עם פער 15Hz ורעש ורוד. מעולה להעלאת מורל, מרץ ומוטיבציה.</p>
                 <audio controls src="pure_joy_963hz.mp3"></audio>
             </div>
-            <div class="card" data-category="focus" onclick="openModal('confidence_432hz.mp3', event)">
+            <div class="card" data-category="focus solfeggio binaural" onclick="openModal('confidence_432hz.mp3', event)">
                 <h3>🏆 ביטחון עצמי ומיקוד בלחץ</h3>
                 <p>תדר 432Hz עם פער 12Hz. מצוין להרגעה וחידוד לפני מבחנים, פגישות או ראיונות עבודה.</p>
                 <audio controls src="confidence_432hz.mp3"></audio>
             </div>
-            <div class="card" data-category="sleep" onclick="openModal('power_nap_136hz.mp3', event)">
+            <div class="card" data-category="sleep binaural" onclick="openModal('power_nap_136hz.mp3', event)">
                 <h3>🛋️ שנ"צ עוצמתי 136.1Hz</h3>
                 <p>תדר OM עמוק עם פער 4.5Hz. למנוחה קצרה ואיכותית של 30 דקות בלי לקום הפוכים.</p>
                 <audio controls src="power_nap_136hz.mp3"></audio>
             </div>
-            <div class="card" data-category="focus" onclick="openModal('super_learning_144hz.mp3', event)">
+            <div class="card" data-category="focus binaural" onclick="openModal('super_learning_144hz.mp3', event)">
                 <h3>📚 למידת-על וקידוד זיכרון 144Hz</h3>
                 <p>תדר 144Hz עם פער 7.5Hz. מביא את המוח ל"מצב ספוג" מושלם לקריאה, שינון וקליטת מידע חדש.</p>
                 <audio controls src="super_learning_144hz.mp3"></audio>
             </div>
-            <div class="card" data-category="healing" onclick="openModal('physical_recovery_174hz.mp3', event)">
+            <div class="card" data-category="healing solfeggio binaural" onclick="openModal('physical_recovery_174hz.mp3', event)">
                 <h3>🔋 התאוששות פיזית והרפיית שרירים</h3>
                 <p>תדר 174Hz עם פער 1.5Hz (דלתא). מיועד להרפיה פיזית עמוקה לאחר מאמץ או יום מתיש.</p>
                 <audio controls src="physical_recovery_174hz.mp3"></audio>
@@ -411,6 +420,7 @@
             document.getElementById('main-content').style.display = 'block';
         }
 
+        // שימו לב לשורת ה-if למטה שעודכנה כדי לתמוך במספר תגיות
         function filterCategory(category, button) {
             let buttons = document.querySelectorAll('.filter-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
@@ -418,7 +428,8 @@
 
             let cards = document.querySelectorAll('.card');
             cards.forEach(card => {
-                if (category === 'all' || card.getAttribute('data-category') === category) {
+                // המילה includes מאפשרת לחפש את התגית בתוך רשימת התגיות של הקובייה
+                if (category === 'all' || card.getAttribute('data-category').includes(category)) {
                     card.style.display = 'block';
                 } else {
                     card.style.display = 'none';
