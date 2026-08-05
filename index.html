@@ -62,7 +62,61 @@
         .card:hover { transform: translateY(-3px); border-color: #38bdf8; }
         .card h3 { margin-top: 0; color: #38bdf8; }
         .card p { color: #94a3b8; font-size: 14px; }
-        audio { width: 100%; margin-top: 15px; }
+
+        /* שינויים למבנה כדי לאפשר נגן תחתון */
+        body { padding-bottom: 90px; } /* מרווח כדי שהנגן לא יסתיר תוכן */
+        audio { display: none; } /* הסתרת נגני ברירת המחדל המכוערים של הדפדפן */
+        
+        /* עיצוב בולט לכרטיסייה שמנגנת עכשיו */
+        .card.playing-now {
+            border-color: #0ea5e9 !important;
+            box-shadow: 0 0 25px rgba(14, 165, 233, 0.4) !important;
+            transform: scale(1.02);
+            transition: all 0.3s ease;
+        }
+
+        /* הנגן הגלובלי התחתון */
+        #global-player {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: rgba(15, 23, 42, 0.95); border-top: 1px solid #38bdf8;
+            padding: 15px 20px; box-shadow: 0 -10px 20px rgba(0,0,0,0.5);
+            display: flex; align-items: center; justify-content: space-between; gap: 20px;
+            z-index: 3000; direction: rtl; backdrop-filter: blur(10px);
+            box-sizing: border-box;
+        }
+        #gp-info { color: #38bdf8; font-weight: bold; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
+        #gp-controls { display: flex; align-items: center; gap: 15px; }
+        .gp-btn { 
+            background: #38bdf8; color: #0f172a; border: none; 
+            width: 45px; height: 45px; border-radius: 50%; cursor: pointer; 
+            font-size: 18px; display: flex; justify-content: center; align-items: center; transition: 0.2s;
+        }
+        .gp-btn:hover { background: #0ea5e9; transform: scale(1.05); }
+        
+        /* פס התקדמות (Progress Bar) */
+        #gp-progress-container { 
+            flex-grow: 1; background: #334155; height: 8px; 
+            border-radius: 4px; cursor: pointer; position: relative; max-width: 600px;
+        }
+        #gp-progress-bar { 
+            background: #38bdf8; height: 100%; width: 0%; 
+            border-radius: 4px; transition: width 0.1s linear; position: relative;
+        }
+        #gp-progress-bar::after {
+            content: ''; position: absolute; left: -4px; top: -4px;
+            width: 16px; height: 16px; background: #fff; border-radius: 50%;
+            box-shadow: 0 0 5px rgba(0,0,0,0.5); display: none;
+        }
+        #gp-progress-container:hover #gp-progress-bar::after { display: block; }
+        #gp-time { color: #94a3b8; font-size: 14px; min-width: 90px; text-align: left; }
+        
+        /* כפתור הפליי החדש שיוזרק לתוך הכרטיסיות */
+        .card-play-btn {
+            background: #1e293b; color: #38bdf8; border: 1px solid #38bdf8;
+            padding: 10px 15px; border-radius: 8px; font-weight: bold; cursor: pointer;
+            margin-top: 15px; width: 100%; transition: 0.2s; font-size: 15px;
+        }
+        .card-play-btn:hover { background: #38bdf8; color: #0f172a; }
 
         /* עיצוב חלוניות המידע (Modals) */
         .modal-overlay {
@@ -95,9 +149,74 @@
         .modal-content::-webkit-scrollbar-track { background: #0f172a; border-radius: 8px; }
         .modal-content::-webkit-scrollbar-thumb { background: #334155; border-radius: 8px; }
         .modal-content::-webkit-scrollbar-thumb:hover { background: #38bdf8; }
+
+        /* --- תרפיה ויזואלית: רקע נושם פועם --- */
+        #visual-therapy-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -1; opacity: 0; 
+            background: radial-gradient(circle at center, rgba(56,189,248,0.15) 0%, transparent 70%);
+            transition: opacity 1s ease;
+        }
+        
+        /* הגדרת צבעים וקצבים לפי סוג הטיפול */
+        .visual-pulse-mind { animation: pulse-breathe 11s infinite ease-in-out; background: radial-gradient(circle at center, rgba(168,85,247,0.18) 0%, transparent 75%) !important; }
+        .visual-pulse-sleep { animation: pulse-breathe 10s infinite ease-in-out; background: radial-gradient(circle at center, rgba(59,130,246,0.15) 0%, transparent 75%) !important; }
+        .visual-pulse-focus { animation: pulse-breathe 5s infinite ease-in-out; background: radial-gradient(circle at center, rgba(234,179,8,0.12) 0%, transparent 75%) !important; }
+        .visual-pulse-healing { animation: pulse-breathe 8s infinite ease-in-out; background: radial-gradient(circle at center, rgba(34,197,94,0.15) 0%, transparent 75%) !important; }
+
+        @keyframes pulse-breathe {
+            0% { opacity: 0; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.1); }
+            100% { opacity: 0; transform: scale(0.8); }
+        }
+
+        /* עיצוב שאלון מצב הרוח */
+        .mood-btn {
+            background: #a855f7; color: #fff; border: none; padding: 12px 28px;
+            border-radius: 8px; font-weight: bold; cursor: pointer; display: block;
+            margin: 0 auto 20px auto; font-size: 18px; transition: 0.2s;
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.5); animation: float 3s ease-in-out infinite;
+        }
+        .mood-btn:hover { background: #9333ea; transform: scale(1.05); }
+        
+        .mood-option {
+            background: #1e293b; color: #e2e8f0; border: 2px solid #334155;
+            padding: 15px; border-radius: 12px; font-size: 16px; font-weight: bold;
+            cursor: pointer; transition: 0.2s; text-align: right;
+        }
+        .mood-option:hover { background: #a855f7; border-color: #a855f7; color: #fff; transform: translateY(-2px); }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* עיצוב סטטיסטיקות הישגים */
+        .stats-container { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; text-align: right; }
+        .stat-row { 
+            background: #1e293b; padding: 12px 15px; border-radius: 8px; 
+            display: flex; justify-content: space-between; align-items: center; 
+            border-right: 4px solid #38bdf8; 
+        }
+        .stat-row.mind { border-color: #a855f7; }
+        .stat-row.sleep { border-color: #3b82f6; }
+        .stat-row.focus { border-color: #eab308; }
+        .stat-row.healing { border-color: #22c55e; }
+        
+        .stat-value { font-size: 20px; font-weight: bold; color: #fff; }
+        .stats-btn { 
+            background: transparent; color: #38bdf8; border: 1px solid #38bdf8; 
+            padding: 12px 28px; border-radius: 8px; font-weight: bold; cursor: pointer; 
+            display: block; margin: 0 auto 20px auto; font-size: 16px; transition: 0.2s;
+        }
+        .stats-btn:hover { background: #38bdf8; color: #0f172a; transform: translateY(-2px); }
     </style>
 </head>
 <body>
+
+    <!-- תרפיה ויזואלית (רקע נושם) -->
+    <div id="visual-therapy-overlay"></div>
 
     <!-- מסך הסבר מקדים -->
     <div id="intro-screen">
@@ -158,9 +277,42 @@
         </div>
     </div>
 
+    <!-- חלונית שאלון מצב הרוח -->
+    <div id="mood-modal" class="modal-overlay" onclick="closeMoodOutside(event)">
+        <div class="modal-content" style="max-width: 450px; text-align: center; border-color: #a855f7;">
+            <button class="close-modal" onclick="closeMoodModal()">&times;</button>
+            <h3 style="color: #a855f7; font-size: 24px;">איך אפשר לעזור לך?</h3>
+            <p>בחר את המצב בו אתה נמצא כרגע, והמעבדה תרקח עבורך את התדר המדויק.</p>
+            <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 25px;">
+                <button class="mood-option" onclick="autoPlayMood('focus')">🚀 אני חייב להתרכז ולעבוד</button>
+                <button class="mood-option" onclick="autoPlayMood('mind')">🍃 אני בסטרס וצריך להירגע</button>
+                <button class="mood-option" onclick="autoPlayMood('sleep')">🌙 אני רוצה לישון חזק</button>
+                <button class="mood-option" onclick="autoPlayMood('healing')">🔋 כואב לי או שאני עייף פיזית</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- חלונית סטטיסטיקות -->
+    <div id="stats-modal" class="modal-overlay" onclick="closeStatsOutside(event)">
+        <div class="modal-content" style="max-width: 400px; border-color: #38bdf8;">
+            <button class="close-modal" onclick="closeStatsModal()">&times;</button>
+            <h3 style="color: #38bdf8; text-align: center; font-size: 24px;">📊 זמן ההאזנה שלי</h3>
+            <p style="text-align: center; font-size: 15px;">כאן תוכלו לראות כמה דקות השקעתם בעצמכם וברוגע שלכם בכל קטגוריה.</p>
+            <div class="stats-container" id="stats-display">
+                <!-- השורות יוזרקו לכאן אוטומטית על ידי הקוד -->
+            </div>
+        </div>
+    </div>
+
     <!-- לוח הבקרה הראשי -->
     <div id="main-content">
         <h1>🧠 מעבדת התדרים והתת-מודע</h1>
+
+        <!-- כפתור שאלון מצב הרוח -->
+        <button class="mood-btn" onclick="openMoodModal()">✨ מה מתחשק לך להרגיש עכשיו?</button>
+
+        <!-- כפתור סטטיסטיקות -->
+        <button class="stats-btn" onclick="openStatsModal()">📊 לוח ההישגים שלי (סטטיסטיקות)</button>
         
         <!-- הכפתור החדש -->
         <button class="info-btn" onclick="openGeneralInfo()">📖 המדע מאחורי התדרים - איך זה עובד?</button>
@@ -168,6 +320,7 @@
         <!-- כפתורי הסינון -->
         <div class="filters">
             <button class="filter-btn active" onclick="filterCategory('all', this)">הכל</button>
+            <button class="filter-btn" onclick="filterCategory('favorites', this)" style="border-color: #f43f5e;">❤️ הפלייליסט שלי</button>
             <button class="filter-btn" onclick="filterCategory('focus', this)">⚡ פוקוס ופרודוקטיביות</button>
             <button class="filter-btn" onclick="filterCategory('sleep', this)">🌙 שינה וחלומות</button>
             <button class="filter-btn" onclick="filterCategory('healing', this)">✨ ריפוי וגוף</button>
@@ -332,6 +485,35 @@
                 <audio controls src="epsilon_0_5hz.mp3"></audio>
             </div>
         </div>
+    </div>
+
+    <!-- נגן האודיו הגלובלי -->
+    <div id="global-player" style="display: none;">
+        <div id="gp-info">שם הקובץ</div>
+        <div id="gp-controls">
+            <button id="gp-play" class="gp-btn">▶️</button>
+            
+            <!-- כפתור לופ -->
+            <button id="gp-loop" style="background: none; border: none; font-size: 22px; cursor: pointer; filter: grayscale(100%); transition: 0.2s;" title="ניגון חוזר (Loop)">🔁</button>
+            
+            <!-- תוספת חדשה: כפתור טיימר -->
+            <button id="gp-timer-btn" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #94a3b8; transition: 0.2s; display: flex; align-items: center; gap: 5px;" title="טיימר שינה (Fade-Out)">
+                ⏳ <span id="gp-timer-display" style="font-size: 14px; font-weight: bold;"></span>
+            </button>
+            
+            <!-- סליידר הווליום -->
+            <div style="display: flex; align-items: center; gap: 8px; margin-right: 15px;">
+                <span style="font-size: 16px;">🔊</span>
+                <input type="range" id="gp-volume" min="0" max="1" step="0.05" value="1" style="width: 80px; cursor: pointer; direction: ltr;">
+            </div>
+        </div>
+        <div id="gp-progress-container" onclick="seekAudio(event)">
+            <div id="gp-progress-bar"></div>
+        </div>
+        <div id="gp-time">00:00 / 00:00</div>
+        
+        <!-- נגן אחד נסתר שמנהל את כל האתר -->
+        <audio id="main-audio-element"></audio>
     </div>
 
     <script>
@@ -515,6 +697,366 @@
                 closeGeneralInfo();
             }
         }
+
+        // --- מנגנון הנגן הגלובלי החדש ---
+        const globalPlayer = document.getElementById('global-player');
+        const mainAudio = document.getElementById('main-audio-element');
+        const gpPlayBtn = document.getElementById('gp-play');
+        const gpInfo = document.getElementById('gp-info');
+        const gpProgressBar = document.getElementById('gp-progress-bar');
+        const gpTime = document.getElementById('gp-time');
+        let currentPlayingCard = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // פעולה אוטומטית: הזרקת כפתור "נגן" יפה לכל כרטיסייה
+            document.querySelectorAll('.card').forEach(card => {
+                let audioTag = card.querySelector('audio');
+                if (!audioTag) return;
+                
+                let audioSrc = audioTag.src;
+                let title = card.querySelector('h3').innerText;
+                
+                let playBtn = document.createElement('button');
+                playBtn.className = 'card-play-btn';
+                playBtn.innerHTML = '▶️ הפעל תדר';
+                
+                // מה קורה כשלוחצים על הכפתור בכרטיסייה
+                playBtn.onclick = (e) => {
+                    e.stopPropagation(); // מונע פתיחה של חלונית המידע בלחיצה על פליי
+                    playGlobalAudio(audioSrc, title, card, playBtn);
+                };
+                
+                card.appendChild(playBtn);
+            });
+        });
+
+        // פונקציית ההפעלה המרכזית
+        function playGlobalAudio(src, title, cardElement, btnElement) {
+            globalPlayer.style.display = 'flex'; // מציג את הנגן התחתון
+            gpInfo.innerText = title;
+            
+            // אם לחצנו על קובץ חדש
+            if (mainAudio.src !== src && !mainAudio.src.includes(src)) {
+                mainAudio.src = src;
+                mainAudio.play();
+                gpPlayBtn.innerText = '⏸️';
+            } else {
+                // אם לחצנו על אותו קובץ, נעשה פאוז או פליי
+                if (mainAudio.paused) {
+                    mainAudio.play();
+                    gpPlayBtn.innerText = '⏸️';
+                } else {
+                    mainAudio.pause();
+                    gpPlayBtn.innerText = '▶️';
+                }
+            }
+            
+            // עדכון העיצוב (כיבוי האור בכרטיסייה הישנה והדלקה בחדשה)
+            document.querySelectorAll('.card').forEach(c => {
+                c.classList.remove('playing-now');
+                c.querySelector('.card-play-btn').innerHTML = '▶️ הפעל תדר';
+            });
+
+            // הפעלת התרפיה הוויזואלית לפי קטגוריה
+            const visualOverlay = document.getElementById('visual-therapy-overlay');
+            visualOverlay.className = ''; // ניקוי צבעים קודמים
+            
+            if (!mainAudio.paused) {
+                let categories = cardElement.getAttribute('data-category');
+                if (categories.includes('mind')) visualOverlay.classList.add('visual-pulse-mind');
+                else if (categories.includes('sleep')) visualOverlay.classList.add('visual-pulse-sleep');
+                else if (categories.includes('focus')) visualOverlay.classList.add('visual-pulse-focus');
+                else if (categories.includes('healing')) visualOverlay.classList.add('visual-pulse-healing');
+                else visualOverlay.classList.add('visual-pulse-mind'); // ברירת מחדל
+            }
+            
+            if (!mainAudio.paused) {
+                cardElement.classList.add('playing-now');
+                btnElement.innerHTML = '⏸️ מנגן כעת...';
+            }
+        }
+
+        // כפתור פליי/פאוז בנגן התחתון עצמו
+        gpPlayBtn.onclick = () => {
+            if (mainAudio.paused) {
+                mainAudio.play();
+                gpPlayBtn.innerText = '⏸️';
+                if(document.querySelector('.playing-now .card-play-btn')) {
+                    document.querySelector('.playing-now .card-play-btn').innerHTML = '⏸️ מנגן כעת...';
+                }
+            } else {
+                mainAudio.pause();
+                gpPlayBtn.innerText = '▶️';
+                document.getElementById('visual-therapy-overlay').className = ''; // מכבה את נשימת הרקע
+                if(document.querySelector('.playing-now .card-play-btn')) {
+                    document.querySelector('.playing-now .card-play-btn').innerHTML = '▶️ הפעל תדר';
+                }
+            }
+        };
+
+        // עדכון פס ההתקדמות והשעון בזמן הניגון
+        mainAudio.addEventListener('timeupdate', () => {
+            if (!isNaN(mainAudio.duration)) {
+                let progress = (mainAudio.currentTime / mainAudio.duration) * 100;
+                gpProgressBar.style.width = progress + '%';
+                
+                let currentMins = Math.floor(mainAudio.currentTime / 60);
+                let currentSecs = Math.floor(mainAudio.currentTime % 60).toString().padStart(2, '0');
+                let totalMins = Math.floor(mainAudio.duration / 60);
+                let totalSecs = Math.floor(mainAudio.duration % 60).toString().padStart(2, '0');
+                
+                gpTime.innerText = `${currentMins}:${currentSecs} / ${totalMins}:${totalSecs}`;
+            }
+        });
+
+        // לחיצה על פס ההתקדמות לקפיצה בזמן
+        function seekAudio(event) {
+            let container = document.getElementById('gp-progress-container');
+            let clickX = event.offsetX;
+            // תמיכה בכיוון ימין-לשמאל (RTL) - הופך את מיקום הלחיצה
+            clickX = container.clientWidth - clickX; 
+            
+            let newTime = (clickX / container.clientWidth) * mainAudio.duration;
+            mainAudio.currentTime = newTime;
+        }
+
+        // שליטה בווליום מהסליידר החדש
+        const gpVolume = document.getElementById('gp-volume');
+        gpVolume.addEventListener('input', (e) => {
+            mainAudio.volume = e.target.value;
+        });
+
+        // שליטה בכפתור הלופ (Loop)
+        const gpLoopBtn = document.getElementById('gp-loop');
+        gpLoopBtn.onclick = () => {
+            mainAudio.loop = !mainAudio.loop; // הופך את המצב (דולק/כבוי)
+            if (mainAudio.loop) {
+                gpLoopBtn.style.filter = 'grayscale(0%)'; // מדליק את הצבע
+                gpLoopBtn.style.transform = 'scale(1.1)'; // מגדיל טיפה
+            } else {
+                gpLoopBtn.style.filter = 'grayscale(100%)'; // מכבה לאפור
+                gpLoopBtn.style.transform = 'scale(1)'; // מחזיר לגודל מקורי
+            }
+        };
+
+        // --- מנגנון פלייליסט אישי (מועדפים) ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // טעינת מועדפים מהזיכרון המקומי של הדפדפן
+            let favorites = JSON.parse(localStorage.getItem('myFrequencyPlaylist')) || [];
+
+            document.querySelectorAll('.card').forEach(card => {
+                // הגדרת מיקום יחסי לכרטיסייה כדי שנוכל למקם את הלב בפינה
+                card.style.position = 'relative';
+
+                // חילוץ שם הקובץ מה-onclick של הכרטיסייה
+                let onclickText = card.getAttribute('onclick');
+                if (!onclickText) return;
+                let filename = onclickText.match(/'([^']+)'/)[1]; 
+
+                // יצירת כפתור הלב
+                let favBtn = document.createElement('button');
+                favBtn.style.cssText = 'position: absolute; top: 12px; left: 12px; background: none; border: none; font-size: 22px; cursor: pointer; transition: 0.2s; z-index: 10; padding: 5px;';
+                
+                // בדיקה האם הקובץ כבר שמור בפלייליסט שלנו
+                let isFav = favorites.includes(filename);
+                favBtn.innerHTML = isFav ? '❤️' : '🤍';
+                
+                // אם זה במועדפים, נוסיף לו את תגית הסינון 'favorites'
+                if (isFav) {
+                    card.setAttribute('data-category', card.getAttribute('data-category') + ' favorites');
+                }
+
+                // אנימציית ריחוף קלה
+                favBtn.onmouseenter = () => favBtn.style.transform = 'scale(1.2)';
+                favBtn.onmouseleave = () => favBtn.style.transform = 'scale(1)';
+
+                // מה קורה שלוחצים על הלב?
+                favBtn.onclick = (e) => {
+                    e.stopPropagation(); // עוצר את פתיחת החלונית
+                    
+                    let currentFavs = JSON.parse(localStorage.getItem('myFrequencyPlaylist')) || [];
+                    let index = currentFavs.indexOf(filename);
+                    let currentCategories = card.getAttribute('data-category');
+
+                    if (index === -1) {
+                        // הוספה לפלייליסט
+                        currentFavs.push(filename);
+                        favBtn.innerHTML = '❤️';
+                        card.setAttribute('data-category', currentCategories + ' favorites');
+                    } else {
+                        // הסרה מהפלייליסט
+                        currentFavs.splice(index, 1);
+                        favBtn.innerHTML = '🤍';
+                        card.setAttribute('data-category', currentCategories.replace('favorites', '').trim());
+                        
+                        // אם אנחנו נמצאים כרגע במסך "הפלייליסט שלי", נעלים את הכרטיסייה מיד
+                        let activeFilter = document.querySelector('.filter-btn.active').innerText;
+                        if (activeFilter.includes('הפלייליסט')) {
+                            card.style.display = 'none';
+                        }
+                    }
+                    // שמירה בחזרה לזיכרון הדפדפן
+                    localStorage.setItem('myFrequencyPlaylist', JSON.stringify(currentFavs));
+                };
+
+                card.appendChild(favBtn);
+            });
+        });
+
+        // --- מנגנון טיימר חכם (Fade-Out) ---
+        const gpTimerBtn = document.getElementById('gp-timer-btn');
+        const gpTimerDisplay = document.getElementById('gp-timer-display');
+        let sleepTimer = null;
+        let timeLeft = 0; // זמן בשניות
+        let timerOptions = [0, 15, 30, 60]; // 0 אומר שהטיימר כבוי
+        let currentTimerIndex = 0;
+        let fadeOutDuration = 180; // 3 דקות של דעיכה הדרגתית בסוף (180 שניות)
+
+        gpTimerBtn.onclick = () => {
+            currentTimerIndex = (currentTimerIndex + 1) % timerOptions.length;
+            let minutes = timerOptions[currentTimerIndex];
+            
+            clearInterval(sleepTimer);
+            mainAudio.volume = gpVolume.value; // אם התחלנו טיימר חדש, מאפסים את הווליום לעוצמה המקורית
+            
+            if (minutes === 0) {
+                gpTimerBtn.style.color = '#94a3b8'; // אפור (כבוי)
+                gpTimerDisplay.innerText = '';
+            } else {
+                gpTimerBtn.style.color = '#38bdf8'; // תכלת מואר
+                timeLeft = minutes * 60;
+                updateTimerDisplay();
+                
+                sleepTimer = setInterval(() => {
+                    timeLeft--;
+                    updateTimerDisplay();
+                    
+                    // מנגנון ה-Fade-Out (ב-3 הדקות האחרונות מוריד ווליום בהדרגה)
+                    if (timeLeft <= fadeOutDuration && timeLeft > 0) {
+                        let originalVolume = parseFloat(gpVolume.value);
+                        let volumeRatio = timeLeft / fadeOutDuration; 
+                        mainAudio.volume = originalVolume * volumeRatio;
+                    }
+                    
+                    // כשהזמן נגמר
+                    if (timeLeft <= 0) {
+                        clearInterval(sleepTimer);
+                        mainAudio.pause();
+                        gpPlayBtn.innerText = '▶️';
+                        gpTimerBtn.style.color = '#94a3b8';
+                        gpTimerDisplay.innerText = '';
+                        currentTimerIndex = 0;
+                        mainAudio.volume = gpVolume.value; // מחזירים לווליום הרגיל לקראת ההפעלה הבאה
+                        
+                        // עדכון כפתור הכרטיסייה
+                        if(document.querySelector('.playing-now .card-play-btn')) {
+                            document.querySelector('.playing-now .card-play-btn').innerHTML = '▶️ הפעל תדר';
+                        }
+                    }
+                }, 1000);
+            }
+        };
+
+        function updateTimerDisplay() {
+            let m = Math.floor(timeLeft / 60);
+            let s = timeLeft % 60;
+            gpTimerDisplay.innerText = `${m}:${s.toString().padStart(2, '0')}`;
+        }
+
+        // --- מנגנון Auto-DJ (שאלון מצב רוח) ---
+        function openMoodModal() { document.getElementById('mood-modal').style.display = 'flex'; }
+        function closeMoodModal() { document.getElementById('mood-modal').style.display = 'none'; }
+        function closeMoodOutside(event) { if (event.target.id === 'mood-modal') closeMoodModal(); }
+
+        function autoPlayMood(category) {
+            closeMoodModal(); // סוגר את החלונית
+
+            // 1. מדמה לחיצה על כפתור הסינון המתאים למעלה כדי שהמשתמש יראה את רשימת הקבצים
+            let filterButtons = document.querySelectorAll('.filter-btn');
+            let targetBtn = Array.from(filterButtons).find(btn => btn.getAttribute('onclick').includes(`'${category}'`));
+            if (targetBtn) {
+                filterCategory(category, targetBtn);
+            }
+
+            // 2. מוצא את כל הכרטיסיות מהקטגוריה המבוקשת
+            let availableCards = Array.from(document.querySelectorAll('.card')).filter(card => 
+                card.getAttribute('data-category').includes(category)
+            );
+
+            if (availableCards.length > 0) {
+                // 3. בוחר כרטיסייה אחת אקראית כדי לגוון למשתמש את החוויה
+                let randomIndex = Math.floor(Math.random() * availableCards.length);
+                let randomCard = availableCards[randomIndex];
+                
+                // 4. מדמה לחיצה על כפתור ה-Play של הכרטיסייה הנבחרת
+                let playBtn = randomCard.querySelector('.card-play-btn');
+                if (playBtn) {
+                    playBtn.click();
+                    
+                    // בונוס קטן: גולל את המסך קצת למטה כדי שהמשתמש יראה מה מתנגן
+                    setTimeout(() => {
+                        randomCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 300);
+                }
+            }
+        }
+
+        // --- מנגנון סטטיסטיקות ומעקב זמן האזנה ---
+        let listeningStats = JSON.parse(localStorage.getItem('frequencyStats')) || { mind: 0, sleep: 0, focus: 0, healing: 0 };
+        let activeCategoryForStats = null;
+
+        // זיהוי הקטגוריה שמתנגנת עכשיו
+        mainAudio.addEventListener('play', () => {
+            let playingCard = document.querySelector('.card.playing-now');
+            if (playingCard) {
+                let cat = playingCard.getAttribute('data-category');
+                if (cat.includes('mind')) activeCategoryForStats = 'mind';
+                else if (cat.includes('sleep')) activeCategoryForStats = 'sleep';
+                else if (cat.includes('focus')) activeCategoryForStats = 'focus';
+                else if (cat.includes('healing')) activeCategoryForStats = 'healing';
+            }
+        });
+
+        // מונה שניות (רץ כל שנייה ברקע)
+        setInterval(() => {
+            if (!mainAudio.paused && activeCategoryForStats) {
+                listeningStats[activeCategoryForStats] += 1;
+                // שומרים לזיכרון של הדפדפן כל 5 שניות כדי לא להעמיס
+                if (listeningStats[activeCategoryForStats] % 5 === 0) {
+                    localStorage.setItem('frequencyStats', JSON.stringify(listeningStats));
+                }
+            }
+        }, 1000);
+
+        // פתיחת החלונית ובניית התצוגה
+        function openStatsModal() {
+            listeningStats = JSON.parse(localStorage.getItem('frequencyStats')) || { mind: 0, sleep: 0, focus: 0, healing: 0 };
+            let html = '';
+            
+            const catDisplay = [
+                { key: 'focus', title: 'פוקוס ולמידה', icon: '🚀', class: 'focus' },
+                { key: 'mind', title: 'רוגע ומיינדפולנס', icon: '🍃', class: 'mind' },
+                { key: 'sleep', title: 'שינה עמוקה', icon: '🌙', class: 'sleep' },
+                { key: 'healing', title: 'ריפוי והתאוששות', icon: '🔋', class: 'healing' }
+            ];
+            
+            catDisplay.forEach(c => {
+                // חלוקה ל-60 כדי להפוך שניות לדקות שלמות
+                let minutes = Math.floor((listeningStats[c.key] || 0) / 60);
+                html += `
+                    <div class="stat-row ${c.class}">
+                        <span>${c.icon} <strong>${c.title}</strong></span>
+                        <span class="stat-value">${minutes} דק'</span>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('stats-display').innerHTML = html;
+            document.getElementById('stats-modal').style.display = 'flex';
+        }
+        
+        function closeStatsModal() { document.getElementById('stats-modal').style.display = 'none'; }
+        function closeStatsOutside(event) { if (event.target.id === 'stats-modal') closeStatsModal(); }
     </script>
 </body>
 </html>
