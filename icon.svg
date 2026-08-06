@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- רקע כחול כהה שמתאים לאפליקציה -->
+  <rect width="512" height="512" rx="110" fill="#0f172a"/>
+  
+  <!-- גל תדר זוהר בתכלת וסגול -->
+  <path d="M 80 256 Q 140 100 200 256 T 312 256 T 432 256" fill="none" stroke="#38bdf8" stroke-width="35" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 80 256 Q 140 412 200 256 T 312 256 T 432 256" fill="none" stroke="#a855f7" stroke-width="20" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+  
+  <!-- נקודת פוקוס באמצע -->
+  <circle cx="256" cy="256" r="30" fill="#f8fafc"/>
+</svg>
