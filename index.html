@@ -1128,6 +1128,24 @@
                 mainAudio.volume = gpVolume.value; // מחזיר ווליום רגיל לפעם הבאה
             }
         };
+
+        // --- מנגנון מיון כרטיסיות אוטומטי לפי סדר אלף-בית ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const grid = document.querySelector('.grid');
+            const cards = Array.from(grid.querySelectorAll('.card'));
+
+            cards.sort((a, b) => {
+                // לוקח את הכותרת (h3), ומנקה את האימוג'ים והתווים המיוחדים בהתחלה כדי למיין רק לפי טקסט נקי
+                let titleA = a.querySelector('h3').innerText.replace(/^[^א-תa-zA-Z0-9]+/, '').trim();
+                let titleB = b.querySelector('h3').innerText.replace(/^[^א-תa-zA-Z0-9]+/, '').trim();
+                
+                // השוואה חכמה לפי השפה העברית
+                return titleA.localeCompare(titleB, 'he');
+            });
+
+            // "שופך" מחדש את הכרטיסיות לתוך הגריד בסדר החדש והממוין
+            cards.forEach(card => grid.appendChild(card));
+        });
     </script>
 </body>
 </html>
