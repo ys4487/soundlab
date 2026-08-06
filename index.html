@@ -522,6 +522,8 @@
                 <span style="font-size: 16px;">🔊</span>
                 <input type="range" id="gp-volume" min="0" max="1" step="0.05" value="1" style="width: 80px; cursor: pointer; direction: ltr;">
             </div>
+
+            <button id="gp-close" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #ef4444; transition: 0.2s; margin-right: 15px;" title="סגור נגן">✖️</button>
         </div>
         <div id="gp-progress-container" onclick="seekAudio(event)">
             <div id="gp-progress-bar"></div>
@@ -1085,6 +1087,38 @@
         
         function closeStatsModal() { document.getElementById('stats-modal').style.display = 'none'; }
         function closeStatsOutside(event) { if (event.target.id === 'stats-modal') closeStatsModal(); }
+
+        // --- כפתור יציאה וסגירת הנגן ---
+        const gpCloseBtn = document.getElementById('gp-close');
+        gpCloseBtn.onclick = () => {
+            // 1. עוצר את המוזיקה
+            mainAudio.pause();
+            
+            // 2. מעלים את הנגן הגלובלי לחלוטין
+            globalPlayer.style.display = 'none';
+            
+            // 3. מכבה את התרפיה הוויזואלית ברקע
+            document.getElementById('visual-therapy-overlay').className = '';
+            
+            // 4. מאפס את כפתור הפליי הראשי בנגן
+            gpPlayBtn.innerText = '▶️';
+            
+            // 5. מנקה את העיצוב מהכרטיסייה שניגנה
+            document.querySelectorAll('.card').forEach(c => {
+                c.classList.remove('playing-now');
+                let playBtn = c.querySelector('.card-play-btn');
+                if (playBtn) playBtn.innerHTML = '▶️ הפעל תדר';
+            });
+            
+            // 6. מכבה את טיימר השינה (אם פעל)
+            if (sleepTimer) {
+                clearInterval(sleepTimer);
+                gpTimerBtn.style.color = '#94a3b8';
+                gpTimerDisplay.innerText = '';
+                currentTimerIndex = 0;
+                mainAudio.volume = gpVolume.value; // מחזיר ווליום רגיל לפעם הבאה
+            }
+        };
     </script>
 </body>
 </html>
